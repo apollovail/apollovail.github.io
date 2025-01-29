@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>document</title>
+    <!-- <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    /> -->
+
+    <link href="fontawesome1/css/all.min.css" rel="stylesheet" />
+    <link href="css/moneyy.css" rel="stylesheet" />
+  </head>
+  <body>
+    <nav class="header-name align-box-center">
+      <h3>thismoodthatmusic</h3>
+    </nav>
+    <div class="header-title align-box-center">
+      <h1>"No cap, these tunes are about to hit different for you."</h1>
+      <p class="font-menu-sm">"What’s the mood?"</p>
+      <div>
+        <select name="genre" id="">
+          <option value="">Jazz</option>
+          <option value="">Hiphop</option>
+          <option value="">ROCK</option>
+          <option value="">POP</option>
+        </select>
+      </div>
+    </div>
+    <div class="main-menu align-box-center">
+      <div>
+        <button
+          class="bt-main"
+          data-mood="Beamin'"
+          data-url="http://127.0.0.1:5500/OTHER/beamin.html"
+        >
+          <span>😁 Beamin'</span>
+        </button>
+      </div>
+      <div>
+        <button class="bt-main">🤔 Reflectin’</button>
+      </div>
+      <div>
+        <button class="bt-main"><span>😢 Gloomin'</span></button>
+      </div>
+      <div>
+        <button class="bt-main"><span>🤣 Crackin’</span></button>
+      </div>
+      <div>
+        <button class="bt-main"><span>😶 Bluein’</span></button>
+      </div>
+      <div>
+        <button class="bt-main"><span>🤩 Dreamin'</span></button>
+      </div>
+      <div>
+        <button class="bt-main">
+          <span
+            ><img
+              src="https://cdn3.emoji.gg/emojis/6124-chillguy.png"
+              width="22px"
+              height="22px"
+              alt="ChillGuy"
+            />
+            Vibin’</span
+          >
+        </button>
+      </div>
+      <div>
+        <button class="bt-main"><span>😍 Lovin’</span></button>
+      </div>
+      <div>
+        <button class="bt-main"><span>🤨 Freakin’</span></button>
+      </div>
+      <div>
+        <button class="bt-main"><span>🤤 hornin’</span></button>
+      </div>
+      <div>
+        <button class="bt-main"><span>🥱 Snoozin’</span></button>
+      </div>
+      <div>
+        <button class="bt-main"><span>🔥 Ragin’</span></button>
+      </div>
+      <div>
+        <button class="bt-main"><span>😨 Spookin’</span></button>
+      </div>
+      <div>
+        <button class="bt-main"><span>😔 Empty..</span></button>
+      </div>
+      <div>
+        <button class="bt-main"><span>😬 Stressin</span></button>
+      </div>
+      <div>
+        <button class="bt-main"><span>🤓 Deepin’</span></button>
+      </div>
+    </div>
+    <script>
+      const buttons = document.querySelectorAll(".bt-main");
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", async () => {
+          const mood = button.getAttribute("data-mood"); // 버튼에서 기분 가져오기
+          const url = button.getAttribute("data-url"); // 버튼에서 URL 가져오기
+
+          // OpenAI API 호출 (필요하면 결과를 URL에 넘길 수도 있음)
+          const apiKey =
+            "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"; // OpenAI API 키
+          const apiUrl = "https://api.openai.com/v1/chat/completions";
+
+          const headers = {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${apiKey}`,
+          };
+
+          const body = JSON.stringify({
+            model: "gpt-4",
+            messages: [
+              {
+                role: "system",
+                content: "You are a helpful assistant that recommends songs.",
+              },
+              {
+                role: "user",
+                content: `Recommend 1 songs for the mood: ${mood}`,
+              },
+            ],
+            max_tokens: 100,
+          });
+
+          try {
+            const response = await fetch(apiUrl, {
+              method: "POST",
+              headers: headers,
+              body: body,
+            });
+
+            const data = await response.json();
+            const recommendations = data.choices[0].message.content;
+
+            // URL로 이동하기 전에 추천받은 노래를 쿼리 파라미터로 전달
+            window.location.href = `${url}?recommendations=${encodeURIComponent(
+              recommendations
+            )}`;
+          } catch (error) {
+            console.error(error);
+            alert("노래 추천 중 오류가 발생했습니다. 다시 시도해주세요!");
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
